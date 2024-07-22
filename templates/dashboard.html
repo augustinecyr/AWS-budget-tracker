@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Tracker 2024</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .edit-form {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-4">Welcome, {{ session['username'] }}</h1>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add Expense</h5>
+          <form action="/add_expense" method="post">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                name="month"
+                placeholder="Month"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="number"
+                class="form-control"
+                name="money_in"
+                placeholder="Money In"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="number"
+                class="form-control"
+                name="money_out"
+                placeholder="Money Out"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Expense</button>
+          </form>
+        </div>
+      </div>
+      <h2 class="my-4">Your Expense History</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Money In</th>
+            <th>Money Out</th>
+            <th>Total</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for expense in expenses %}
+          <tr>
+            <td>{{ expense['month'] }}</td>
+            <td>{{ expense['money_in'] }}</td>
+            <td>{{ expense['money_out'] }}</td>
+            <td>{{ expense['money_in'] - expense['money_out'] }}</td>
+            <td>
+              <button
+                class="btn btn-warning btn-sm"
+                onclick="showEditForm({{ expense['id'] }}, '{{ expense['month'] }}', {{ expense['money_in'] }}, {{ expense['money_out'] }})"
+              >
+                Edit
+              </button>
+              <form
+                action="{{ url_for('delete_expense', id=expense['id']) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button type="submit" class="btn btn-danger btn-sm">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Edit Expense Form -->
+      <div id="editFormContainer" class="edit-form card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Edit Expense</h5>
+          <form id="editExpenseForm" action="" method="post">
+            <div class="form-group">
+              <label for="editMonth">Month</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editMonth"
+                name="month"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <label for="editMoneyIn">Money In</label>
+              <input
+                type="number"
+                class="form-control"
+                id="editMoneyIn"
+                name="money_in"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editMoneyOut">Money Out</label>
+              <input
+                type="number"
+                class="form-control"
+                id="editMoneyOut"
+                name="money_out"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="hideEditForm()"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      function showEditForm(id, month, moneyIn, moneyOut) {
+        $("#editExpenseForm").attr("action", "/edit_expense/" + id);
+        $("#editMonth").val(month);
+        $("#editMoneyIn").val(moneyIn);
+        $("#editMoneyOut").val(moneyOut);
+        $("#editFormContainer").show();
+        $("html, body").animate(
+          {
+            scrollTop: $("#editFormContainer").offset().top,
+          },
+          1000
+        );
+      }
+
+      function hideEditForm() {
+        $("#editFormContainer").hide();
+      }
+    </script>
+  </body>
+</html>
