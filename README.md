@@ -1,7 +1,3 @@
-Here's a summary for your `readme.md`:
-
----
-
 # Budget Tracker Application with AWS Academy Lab
 
 ## Overview
