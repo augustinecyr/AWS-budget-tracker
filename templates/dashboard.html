@@ -34,13 +34,21 @@
           <h5 class="card-title">Add Expense</h5>
           <form action="/add_expense" method="post">
             <div class="form-group">
-              <input
-                type="text"
-                class="form-control"
-                name="month"
-                placeholder="Month"
-                required
-              />
+              <select class="form-control" name="month" required>
+                <option value="" disabled selected>Select Month</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+              </select>
             </div>
             <div class="form-group">
               <input

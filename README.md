@@ -43,8 +43,8 @@ This project sets up a Budget Tracker application on an AWS EC2 instance using a
 - Expense editing functionality.
 - Secure communication between the app and the MySQL database.
 - Integrate Bootstrap for a better UI.
-- Added forecasting feature to predict future expenses for up to 1 year.
-
+- Added forecasting feature to predict future expenses for up to the next 12 months, this feature will factor in the latest month entry against the existing records on the user's account.
+ 
 ## Future Enhancements
 
 - Add more features for admin use case.
