@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
+import logging
+from datetime import datetime
+import calendar
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
+logging.basicConfig(filename="app.log", level=logging.DEBUG)
 
 # Database connection
 connection = pymysql.connect(
@@ -117,5 +121,80 @@ def delete_expense(id):
         return redirect("/")
 
 
+def predict_budget(expenses):
+
+    # Helper function to convert month names to datetime objects
+    def month_to_date(month_name):
+        return datetime.strptime(month_name, "%B")
+
+    if not expenses:
+        return [], [], [], []
+
+    # Extract data
+    months = [expense["month"] for expense in expenses]
+    money_in = [float(expense["money_in"]) for expense in expenses]
+    money_out = [float(expense["money_out"]) for expense in expenses]
+
+    # Convert month names to datetime objects if needed
+    try:
+        last_month = month_to_date(months[-1])
+    except ValueError:
+        # If conversion fails, return empty lists or handle as needed
+        return [], [], [], []
+
+    # Simple prediction logic: using average of past data
+    avg_in = sum(money_in) / len(money_in)
+    avg_out = sum(money_out) / len(money_out)
+
+    # Predict for the next 3 months
+    predicted_months = []
+    predicted_in = []
+    predicted_out = []
+    predicted_total = []
+
+    for i in range(1, 4):  # Predict for next 3 months
+        next_month = last_month.month + i
+        next_year = last_month.year + (next_month - 1) // 12
+        next_month = (next_month - 1) % 12 + 1
+
+        month_name = calendar.month_name[next_month]
+        month_str = f"{next_year}-{str(next_month).zfill(2)}"
+        predicted_months.append(month_str)
+        predicted_in.append(avg_in)
+        predicted_out.append(avg_out)
+        predicted_total.append(avg_in - avg_out)
+
+    return predicted_months, predicted_in, predicted_out, predicted_total
+
+
+@app.route("/forecast", methods=["POST"])
+def forecast():
+    try:
+        if "username" in session:
+            username = session["username"]
+
+            with connection.cursor() as cursor:
+                sql = "SELECT month, money_in, money_out FROM expenses WHERE username=%s ORDER BY month"
+                cursor.execute(sql, (username,))
+                expenses = cursor.fetchall()
+
+            months, predicted_in, predicted_out, predicted_total = predict_budget(
+                expenses
+            )
+
+            # Combine data into a list of tuples
+            forecast_data = list(zip(months, predicted_in, predicted_out, predicted_total))
+
+            return render_template(
+                "forecast.html",
+                forecast_data=forecast_data
+            )
+        else:
+            return redirect("/")
+    except Exception as e:
+        app.logger.error(f"Error in forecast route: {e}")
+        return "An error occurred", 500
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8080, debug=True)

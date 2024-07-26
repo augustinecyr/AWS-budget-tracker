@@ -67,19 +67,22 @@ SHOW TABLES;
 DROP TABLE IF EXISTS expenses;
 DROP TABLE IF EXISTS income;
 
-CREATE TABLE expenses (
-id INT AUTO_INCREMENT PRIMARY KEY,
-amount DECIMAL(10, 2) NOT NULL,
-category VARCHAR(255) NOT NULL,
-date DATE NOT NULL,
-description TEXT
-);
+CREATE TABLE `expenses` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `month` varchar(50) NOT NULL,
+  `money_in` decimal(10,2) NOT NULL,
+  `money_out` decimal(10,2) NOT NULL,
+  `total` decimal(10,2) GENERATED ALWAYS AS ((`money_in` - `money_out`)) STORED,
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`),
+  CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+) 
 
-CREATE TABLE income (
-id INT AUTO_INCREMENT PRIMARY KEY,
-amount DECIMAL(10, 2) NOT NULL,
-source VARCHAR(255) NOT NULL,
-date DATE NOT NULL,
-description TEXT
-);
+CREATE TABLE `users` (
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`username`)
+) 
 ```

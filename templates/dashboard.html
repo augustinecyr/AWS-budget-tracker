@@ -18,9 +18,16 @@
     <div class="container">
       <div class="d-flex justify-content-between align-items-center my-4">
         <h1>Welcome, {{ session['username'] }}</h1>
-        <form action="/logout" method="post">
-          <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
+        <div>
+          <form action="/forecast" method="post" style="display: inline">
+            <button type="submit" class="btn btn-primary">
+              Budget Forecast
+            </button>
+          </form>
+          <form action="/logout" method="post" style="display: inline">
+            <button type="submit" class="btn btn-danger">Logout</button>
+          </form>
+        </div>
       </div>
       <div class="card mb-4">
         <div class="card-body">

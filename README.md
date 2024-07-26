@@ -43,10 +43,12 @@ This project sets up a Budget Tracker application on an AWS EC2 instance using a
 - Expense editing functionality.
 - Secure communication between the app and the MySQL database.
 - Integrate Bootstrap for a better UI.
+- Added forecasting feature to predict future expenses.
 
 ## Future Enhancements
 
 - Add more features for admin use case.
-- Explore pulling records from RDS using S3.
+- Explore pulling records from RDS using S3 Bucket.
+- Explore storing app.log file into S3 Bucket.
 
 ---
