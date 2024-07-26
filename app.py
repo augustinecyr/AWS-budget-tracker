@@ -19,6 +19,12 @@ def index():
     return render_template("login.html")
 
 
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    session.clear()
+    return redirect("/")
+
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
