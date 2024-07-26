@@ -122,37 +122,35 @@ def delete_expense(id):
 
 
 def predict_budget(expenses):
+    from datetime import datetime
+    import calendar
 
-    # Helper function to convert month names to datetime objects
-    def month_to_date(month_name):
-        return datetime.strptime(month_name, "%B")
+    def month_to_date(month_name, base_year):
+        return datetime.strptime(f"{base_year} {month_name}", "%Y %B")
 
     if not expenses:
         return [], [], [], []
 
-    # Extract data
     months = [expense["month"] for expense in expenses]
     money_in = [float(expense["money_in"]) for expense in expenses]
     money_out = [float(expense["money_out"]) for expense in expenses]
 
-    # Convert month names to datetime objects if needed
+    base_year = datetime.now().year
+
     try:
-        last_month = month_to_date(months[-1])
+        last_month = month_to_date(months[-1], base_year)
     except ValueError:
-        # If conversion fails, return empty lists or handle as needed
         return [], [], [], []
 
-    # Simple prediction logic: using average of past data
     avg_in = sum(money_in) / len(money_in)
     avg_out = sum(money_out) / len(money_out)
 
-    # Predict for the next 3 months
     predicted_months = []
     predicted_in = []
     predicted_out = []
     predicted_total = []
 
-    for i in range(1, 4):  # Predict for next 3 months
+    for i in range(1, 13):
         next_month = last_month.month + i
         next_year = last_month.year + (next_month - 1) // 12
         next_month = (next_month - 1) % 12 + 1
@@ -160,9 +158,13 @@ def predict_budget(expenses):
         month_name = calendar.month_name[next_month]
         month_str = f"{next_year}-{str(next_month).zfill(2)}"
         predicted_months.append(month_str)
-        predicted_in.append(avg_in)
-        predicted_out.append(avg_out)
-        predicted_total.append(avg_in - avg_out)
+
+        predicted_in_value = avg_in * (1 + 0.01 * i)
+        predicted_out_value = avg_out * (1 + 0.01 * i)
+
+        predicted_in.append(predicted_in_value)
+        predicted_out.append(predicted_out_value)
+        predicted_total.append(predicted_in_value - predicted_out_value)
 
     return predicted_months, predicted_in, predicted_out, predicted_total
 
@@ -182,13 +184,11 @@ def forecast():
                 expenses
             )
 
-            # Combine data into a list of tuples
-            forecast_data = list(zip(months, predicted_in, predicted_out, predicted_total))
-
-            return render_template(
-                "forecast.html",
-                forecast_data=forecast_data
+            forecast_data = list(
+                zip(months, predicted_in, predicted_out, predicted_total)
             )
+
+            return render_template("forecast.html", forecast_data=forecast_data)
         else:
             return redirect("/")
     except Exception as e:

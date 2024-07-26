@@ -55,6 +55,7 @@ sudo yum groupinstall "Development Tools" -y
 sudo yum install python3 python3-pip python3-devel -y
 sudo pip3 install --upgrade pip
 sudo pip3 install flask pymysql
+cat app.log
 ```
 
 ## SQL CLI Commands

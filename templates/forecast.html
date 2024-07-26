@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Budget Forecast</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center my-4">
-      <h1>Budget Forecast</h1>
-      <form action="/logout" method="post">
-        <button type="submit" class="btn btn-danger">Logout</button>
-      </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budget Forecast</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center my-4">
+        <h1>Budget Forecast</h1>
+        <form action="/logout" method="post">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+
+      <h2 class="my-4">Forecast</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Predicted Money In</th>
+            <th>Predicted Money Out</th>
+            <th>Predicted Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for month, in_, out, total in forecast_data %}
+          <tr>
+            <td>{{ month }}</td>
+            <td>{{ in_ | round(2) }}</td>
+            <td>{{ out | round(2) }}</td>
+            <td>{{ total | round(2) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    
-    <h2 class="my-4">Forecast</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Predicted Money In</th>
-          <th>Predicted Money Out</th>
-          <th>Predicted Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for month, in_, out, total in forecast_data %}
-        <tr>
-          <td>{{ month }}</td>
-          <td>{{ in_ }}</td>
-          <td>{{ out }}</td>
-          <td>{{ total }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </body>
 </html>
