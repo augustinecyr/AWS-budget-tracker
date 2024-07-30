@@ -1,0 +1,18 @@
+[Unit]
+Description=Flask Application using Docker
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=/usr/bin/docker build -t budget_tracker:latest /home/ec2-user/budget_tracker
+ExecStart=/usr/bin/docker run --rm -p 8080:8080 --name budget_tracker_container budget_tracker:latest
+ExecStop=/usr/bin/docker stop budget_tracker_container
+ExecStopPost=/usr/bin/docker rm -f budget_tracker_container
+Restart=always
+User=ec2-user
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=flaskapp
+
+[Install]
+WantedBy=multi-user.target

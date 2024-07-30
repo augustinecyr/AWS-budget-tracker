@@ -30,6 +30,9 @@ sudo systemctl enable flaskapp
 sudo systemctl start flaskapp
 sudo systemctl status flaskapp
 sudo nano /etc/httpd/conf.d/flaskapp.conf
+
+sudo journalctl -u flaskapp
+
 ```
 
 ## Request forwarding for Apache as Reverse Proxy
@@ -56,6 +59,8 @@ sudo yum install python3 python3-pip python3-devel -y
 sudo pip3 install --upgrade pip
 sudo pip3 install flask pymysql
 cat app.log
+sudo systemctl status flaskapp
+
 ```
 
 ## SQL CLI Commands
@@ -86,4 +91,19 @@ CREATE TABLE `users` (
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`)
 ) 
+```
+## Docker Configuration on EC2
+```
+sudo dnf update -y
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+docker --version
+sudo systemctl status docker
+docker ps
+sudo docker logs budget_tracker_container
+sudo docker build -t budget_tracker:latest .
+sudo docker run --rm -p 8080:8080 --name budget_tracker_container budget_tracker:latest
+
 ```

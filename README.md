@@ -44,12 +44,13 @@ This project sets up a Budget Tracker application on an AWS EC2 instance using a
 - Secure communication between the app and the MySQL database.
 - Integrate Bootstrap for a better UI.
 - Added forecasting feature to predict future expenses for up to the next 12 months, this feature will factor in the latest month entry against the existing records on the user's account.
+- Added Docker support, now with the dockerflaskapp.service file and requirements.txt, users can scale with the image as and when to x amount of EC2 instances.
+- Reverse proxy configured to launch the application on booting of EC2 instance.
  
 ## Future Enhancements
 
 - Add more features for admin use case.
 - Explore pulling records from RDS using S3 Bucket.
 - Explore storing app.log file into S3 Bucket.
-- Provide Docker option for the application.
 
 ---
